@@ -10,33 +10,11 @@ lazy val commonSettings = scalariformSettings ++ Seq(
     .setPreference(PreserveSpaceBeforeArguments, true)
     .setPreference(CompactControlReadability, true)
     .setPreference(SpacesAroundMultiImports, false),
-  // Sonatype OSS deployment
-  publishTo <<= version { (v: String) =>
-    val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-  },
-  credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),publishMavenStyle := true,
-  pomIncludeRepository := { _ => false },pomExtra := (
-    <scm>
-      <url>git@github.com/softwaremill/akka-http-session.git</url>
-      <connection>scm:git:git@github.com/softwaremill/akka-http-session.git</connection>
-    </scm>
-      <developers>
-        <developer>
-          <id>adamw</id>
-          <name>Adam Warski</name>
-          <url>http://www.warski.org</url>
-        </developer>
-      </developers>
-    ),
   licenses := ("Apache2", new java.net.URL("http://www.apache.org/licenses/LICENSE-2.0.txt")) :: Nil,
   homepage := Some(new java.net.URL("http://softwaremill.com"))
 )
 
-val akkaVersion = "2.4.3"
+val akkaVersion = "2.4.4"
 
 val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 
@@ -53,9 +31,9 @@ lazy val core: Project = (project in file("core"))
     name := "core",
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http-core" % akkaVersion,
-      "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
+//      "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
       "com.typesafe.akka" %% "akka-http-testkit" % akkaVersion % "test",
-      "org.scalacheck" %% "scalacheck" % "1.13.0" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.12.5" % "test",
       scalaTest
     )
   )
@@ -65,7 +43,7 @@ lazy val jwt: Project = (project in file("jwt"))
   .settings(
     name := "jwt",
     libraryDependencies ++= Seq(
-      "org.json4s" %% "json4s-native" % "3.3.0",
+      "org.json4s" %% "json4s-jackson" % "3.3.0",
       scalaTest
     )
   ) dependsOn(core)
